@@ -280,6 +280,7 @@ function decodefield (str) {
       value = getlatin1(binary)
       break
     case 'utf-8':
+    case 'utf8':
       value = new Buffer(binary, 'binary').toString('utf8')
       break
     default:
@@ -354,7 +355,11 @@ function parse (string) {
     if (key.indexOf('*') + 1 === key.length) {
       // decode extended value
       key = key.slice(0, -1)
-      value = decodefield(value)
+      try {
+        value = decodefield(value)
+      } catch (error) {
+        continue
+      }
 
       // overwrite existing value
       params[key] = value
